@@ -563,6 +563,8 @@ export const LightboxImage: React.FC<IProps> = ({
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <ImageView
             loop={isVideo}
+            muted={isVideo}
+            playsInline={isVideo}
             src={src}
             alt=""
             draggable={false}
