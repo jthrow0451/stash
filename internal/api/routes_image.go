@@ -86,6 +86,15 @@ func (rs imageRoutes) serveThumbnail(w http.ResponseWriter, r *http.Request, img
 		encoder := image.NewThumbnailEncoder(manager.GetInstance().FFMpeg, manager.GetInstance().FFProbe, clipPreviewOptions)
 		data, err := encoder.GetThumbnail(f, models.DefaultGthumbWidth)
 		if err != nil {
+			// video file, retry without pipes
+			if _, ok := f.(*models.VideoFile); ok {
+				err := encoder.GetThumbnailFromVideo(f, f.Base().Path, filepath, models.DefaultGthumbWidth)
+				if err != nil {
+					logger.Errorf("error generating thumbnail for video %s: %w", f.Base().Path, err)
+				}
+				return
+			}
+
 			// don't log for unsupported image format
 			// don't log for file not found - can optionally be logged in serveImage
 			if !errors.Is(err, image.ErrNotSupportedForThumbnail) && !errors.Is(err, fs.ErrNotExist) {

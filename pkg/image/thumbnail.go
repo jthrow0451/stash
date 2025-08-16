@@ -61,6 +61,21 @@ func NewThumbnailEncoder(ffmpegEncoder *ffmpeg.FFMpeg, ffProbe *ffmpeg.FFProbe, 
 	return ret
 }
 
+func (e *ThumbnailEncoder) GetThumbnailFromVideo(f models.File, inPath string, outPath string, maxSize int) error {
+	args := transcoder.ImageThumbnail(inPath, transcoder.ImageThumbnailOptions{
+		OutputFormat:  ffmpeg.ImageFormatJpeg,
+		OutputPath:    outPath,
+		MaxDimensions: maxSize,
+		Quality:       ffmpegImageQuality,
+	})
+
+	if err := fsutil.EnsureDirAll(filepath.Dir(outPath)); err != nil {
+		return err
+	}
+
+	return e.FFMpeg.Generate(context.TODO(), args)
+}
+
 // GetThumbnail returns the thumbnail image of the provided image resized to
 // the provided max size. It resizes based on the largest X/Y direction.
 // It returns nil and an error if an error occurs reading, decoding or encoding

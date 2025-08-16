@@ -52,6 +52,15 @@ func (t *GenerateImageThumbnailTask) Start(ctx context.Context) {
 	data, err := encoder.GetThumbnail(f, models.DefaultGthumbWidth)
 
 	if err != nil {
+		// video file, retry without pipes
+		if _, ok := f.(*models.VideoFile); ok {
+			err := encoder.GetThumbnailFromVideo(f, path, thumbPath, models.DefaultGthumbWidth)
+			if err != nil {
+				logger.Errorf("[generator] getting thumbnail for video %s: %w", path, err)
+			}
+			return
+		}
+
 		// don't log for animated images
 		if !errors.Is(err, image.ErrNotSupportedForThumbnail) {
 			logger.Errorf("[generator] getting thumbnail for image %s: %s", path, err.Error())
