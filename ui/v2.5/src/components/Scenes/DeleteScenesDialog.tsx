@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import { useScenesDestroy } from "src/core/StashService";
 import * as GQL from "src/core/generated-graphql";
 import { ModalComponent } from "src/components/Shared/Modal";
+import { FileSize } from "../Shared/FileSize";
 import { useToast } from "src/hooks/Toast";
 import { useConfigurationContext } from "src/hooks/Config";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -85,9 +86,13 @@ export const DeleteScenesDialog: React.FC<IDeleteSceneDialogProps> = (
     }
 
     const deletedFiles: string[] = [];
+    let totalFilesize: number = 0;
 
     props.selected.forEach((s) => {
-      const paths = s.files.map((f) => f.path);
+      const paths = s.files.map((f) => {
+        totalFilesize += f.size
+        return f.path
+      });
       deletedFiles.push(...paths);
       if (s.interactive && s.files.length) {
         deletedFiles.push(funscriptPath(objectPath(s)));
@@ -109,7 +114,7 @@ export const DeleteScenesDialog: React.FC<IDeleteSceneDialogProps> = (
               pluralEntity: intl.formatMessage({ id: "files" }),
             }}
             id={deleteAlertId}
-          />
+          /> <FileSize size={totalFilesize}/>
         </p>
         <ul>
           {deletedFiles.slice(0, 5).map((s) => (
