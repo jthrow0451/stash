@@ -572,7 +572,6 @@ export class ListFilterModel {
 
   public reshuffleRandomSort() {
     const ret = this.clone();
-    ret.currentPage = 1;
     ret.randomSeed = -1;
     return ret;
   }
