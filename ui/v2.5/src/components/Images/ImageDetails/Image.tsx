@@ -383,6 +383,7 @@ const ImagePage: React.FC<IProps> = ({ image }) => {
             autoPlay={image.visual_files[0].__typename == "VideoFile"}
             playsInline={image.visual_files[0].__typename == "VideoFile"}
             controls={image.visual_files[0].__typename == "VideoFile"}
+            muted={image.visual_files[0].__typename == "VideoFile"}
             className="m-sm-auto no-gutter image-image"
             style={
               image.visual_files[0].__typename == "VideoFile"
