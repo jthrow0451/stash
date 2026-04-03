@@ -10,6 +10,7 @@ import {
   faPencilAlt,
   faPlay,
   faTrash,
+  faCheckSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import cx from "classnames";
 import { createPortal } from "react-dom";
@@ -130,6 +131,14 @@ export const ListOperationButtons: React.FC<IListOperationButtonsProps> = ({
       return o.isDisplayed();
     });
 
+    if (onSelectAll) {
+      ret.push({
+        icon: faCheckSquare,
+        text: intl.formatMessage({ id: "actions.select_all" }),
+        onClick: onSelectAll,
+      });
+    }
+
     if (itemsSelected) {
       if (onEdit) {
         ret.push({
@@ -149,7 +158,7 @@ export const ListOperationButtons: React.FC<IListOperationButtonsProps> = ({
     }
 
     return ret;
-  }, [otherOperations, itemsSelected, onEdit, onDelete, intl]);
+  }, [otherOperations, itemsSelected, onEdit, onDelete, onSelectAll, intl]);
 
   const operationButtons = useMemo(() => {
     return (
@@ -275,6 +284,7 @@ export const ListOperations: React.FC<{
   onEdit?: () => void;
   onDelete?: () => void;
   onPlay?: () => void;
+  onSelectAll?: () => void;
   operationsClassName?: string;
   operationsMenuClassName?: string;
 }> = ({
@@ -284,6 +294,7 @@ export const ListOperations: React.FC<{
   onEdit,
   onDelete,
   onPlay,
+  onSelectAll,
   operationsClassName = "list-operations",
   operationsMenuClassName,
 }) => {
@@ -358,9 +369,22 @@ export const ListOperations: React.FC<{
         </Button>
       ) : null;
 
+    const selectAllButton =
+      !hasSelection ? (
+        <Button
+          className="select-all-button"
+          variant="secondary"
+          onClick={() => onSelectAll()}
+          title={intl.formatMessage({ id: "actions.select_all" })}
+        >
+          <Icon icon={faCheckSquare} />
+        </Button>
+      ) : null;
+
     addButton(playButton);
     addButton(editButton);
     addButton(deleteButton);
+    addButton(selectAllButton);
 
     otherButtons.forEach((button) => {
       addButton(

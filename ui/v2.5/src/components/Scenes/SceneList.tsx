@@ -634,6 +634,7 @@ export const FilteredSceneList = PatchComponent(
         onEdit={onEdit}
         onDelete={onDelete}
         onPlay={onPlay}
+        onSelectAll={onSelectAll}
         operationsMenuClassName="scene-list-operations-dropdown"
       />
     );
