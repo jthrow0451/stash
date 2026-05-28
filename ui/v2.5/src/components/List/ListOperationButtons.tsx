@@ -4,6 +4,7 @@ import Mousetrap from "mousetrap";
 import { FormattedMessage, useIntl } from "react-intl";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Icon } from "../Shared/Icon";
+import { FileSize } from "../Shared/FileSize";
 import {
   faEllipsisH,
   faPencil,
@@ -285,6 +286,7 @@ export const ListOperations: React.FC<{
   onDelete?: () => void;
   onPlay?: () => void;
   onSelectAll?: () => void;
+  totalSelectedSize?: () => void;
   operationsClassName?: string;
   operationsMenuClassName?: string;
 }> = ({
@@ -295,6 +297,7 @@ export const ListOperations: React.FC<{
   onDelete,
   onPlay,
   onSelectAll,
+  totalSelectedSize,
   operationsClassName = "list-operations",
   operationsMenuClassName,
 }) => {
@@ -413,6 +416,11 @@ export const ListOperations: React.FC<{
 
   return (
     <div className="list-operations">
+      {hasSelection && totalSelectedSize !== undefined && totalSelectedSize > 0 && (
+        <span className="selected-scenes-size">
+          <FileSize size={totalSelectedSize} />
+        </span>
+      )}
       <ButtonGroup>
         {buttons}
 

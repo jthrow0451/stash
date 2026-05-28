@@ -487,6 +487,12 @@ export const FilteredSceneList = PatchComponent(
     const playSelected = usePlaySelected(selectedIds);
     const playFirst = usePlayFirst();
 
+    const totalSelectedSize = useMemo(() => {
+      return selectedItems.reduce((total, scene) => {
+        return total + scene.files.reduce((sum, f) => sum + f.size, 0);
+      }, 0);
+    }, [selectedItems]);
+
     function onCreateNew() {
       let queryParam = new URLSearchParams(location.search).get("q");
       let newPath = "/scenes/new";
@@ -635,6 +641,7 @@ export const FilteredSceneList = PatchComponent(
         onDelete={onDelete}
         onPlay={onPlay}
         onSelectAll={onSelectAll}
+        totalSelectedSize={totalSelectedSize}
         operationsMenuClassName="scene-list-operations-dropdown"
       />
     );
